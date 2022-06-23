@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GarticTest", "GarticTest\GarticTest.csproj", "{A7DC2B60-D20D-4497-8ECE-C3D15E8A5E1F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A7DC2B60-D20D-4497-8ECE-C3D15E8A5E1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7DC2B60-D20D-4497-8ECE-C3D15E8A5E1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7DC2B60-D20D-4497-8ECE-C3D15E8A5E1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7DC2B60-D20D-4497-8ECE-C3D15E8A5E1F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB5EA825-4012-4036-B60F-039070728AC8}
+	EndGlobalSection
+EndGlobal
