@@ -1,4 +1,5 @@
-﻿using GarticTest.Model.WebSocket;
+﻿using GarticTest.Model.Enums;
+using GarticTest.Model.WebSocket;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,17 @@ namespace GarticTest.Model.Messages.Client
         public override GarticMessageType Type => GarticMessageType.TextInput;
 
         public string Text;
+        public TextInputType InputType;
 
-        public GarticTextInputMessage(string message)
+        public GarticTextInputMessage(string message, TextInputType textInputType)
         {
             Text = message;
+            InputType = textInputType;
         }
 
         public override string Serialize()
         {
-            return $"42[2,{(int)Type},{JsonConvert.SerializeObject(new TextInputData { Text = Text, Timestamp = 0 })}]";
+            return $"42[2,{(int)Type},{JsonConvert.SerializeObject(new TextInputData { Text = Text, Type = InputType })}]";
         }
     }
 }

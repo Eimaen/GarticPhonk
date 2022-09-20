@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace GarticTest.Model.Enums
 {
-    public enum TurnType
+    public enum TextInputType
     {
-        Sentence = 3,
-        Guess = 4,
-        Draw = 5
+        Sentence = 0,
+        Guess = 2
     }
 }

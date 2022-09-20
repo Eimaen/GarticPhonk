@@ -16,11 +16,13 @@ namespace GarticTest.Model.Messages.Server
         public TurnType TurnType;
         public int Number, PreviousTurnId, PreviousUserId;
         public string Sentence, PreviousUserNickname;
-        public string PreviousTurnData; // ?
+        public object PreviousTurnData; // ?
 
-        public GarticGameTurnMessage(object data)
+        public GarticGameTurnMessage(object dataRaw)
         {
-            var turnData = JsonConvert.DeserializeObject<TurnData>(data.ToString());
+            string data = dataRaw.ToString();
+            Console.WriteLine($"dd: {data}");
+            var turnData = JsonConvert.DeserializeObject<TurnData>(data);
             TurnType = turnData.TurnType;
             Number = turnData.TurnNumber;
             Sentence = turnData.Sentence;

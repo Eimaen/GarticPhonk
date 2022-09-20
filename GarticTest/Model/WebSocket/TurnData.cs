@@ -17,7 +17,7 @@ namespace GarticTest.Model.WebSocket
         public PlayerJoinData User;
 
         [JsonProperty("data")]
-        public string Data;
+        public object Data;
     }
 
     internal class TurnData

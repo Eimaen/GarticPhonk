@@ -84,7 +84,9 @@
   <ItemGroup>
     <Compile Include="GarticClient.cs" />
     <Compile Include="GarticDrawController.cs" />
+    <Compile Include="GarticImageConverter.cs" />
     <Compile Include="ImageExtensions.cs" />
+    <Compile Include="Model\Enums\TextInputType.cs" />
     <Compile Include="Model\Enums\TurnType.cs" />
     <Compile Include="Model\GarticMessage.cs" />
     <Compile Include="GarticSocket.cs" />
@@ -98,10 +100,14 @@
     <Compile Include="Model\Messages\Server\GarticGameTurnMessage.cs" />
     <Compile Include="Model\Messages\Server\GarticPingProbeResponseMessage.cs" />
     <Compile Include="Model\Messages\Server\GarticPingResponseMessage.cs" />
+    <Compile Include="Model\Messages\Server\GarticPlayerLeftMessage.cs" />
     <Compile Include="Model\Messages\Server\GarticServerSubmitMessage.cs" />
     <Compile Include="Model\Messages\Client\GarticTextInputMessage.cs" />
     <Compile Include="Model\Messages\Server\GarticPlayerJoinMessage.cs" />
     <Compile Include="Model\Messages\GarticUnknownMessage.cs" />
+    <Compile Include="Model\Types\User.cs" />
+    <Compile Include="Model\WebSocket\GameData.cs" />
+    <Compile Include="Model\WebSocket\PlayerLeftData.cs" />
     <Compile Include="Model\WebSocket\RawDrawData.cs" />
     <Compile Include="Model\WebSocket\PlayerJoinData.cs" />
     <Compile Include="Model\WebSocket\ReadyData.cs" />

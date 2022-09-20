@@ -13,6 +13,7 @@ namespace GarticTest.Model
     {
         Unknown = 0,
         PlayerJoin = 2,
+        PlayerLeft = 3,
         PingResponse = 100,
         PingProbeResponse = 101,
         GamemodeSwitch = 26,

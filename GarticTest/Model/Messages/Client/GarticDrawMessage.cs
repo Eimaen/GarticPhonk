@@ -21,16 +21,18 @@ namespace GarticTest.Model.Messages.Client
 
         public DrawMessageType DrawMessageType;
         public object DrawData;
+        public int TurnNumber;
 
-        public GarticDrawMessage(DrawMessageType messageType, object drawData)
+        public GarticDrawMessage(DrawMessageType messageType, int turn, object drawData)
         {
             DrawMessageType = messageType;
             DrawData = drawData;
+            TurnNumber = turn;
         }
 
         public override string Serialize()
         {
-            return $"42[2,{(int)Type},{JsonConvert.SerializeObject(new RawDrawData() { Type = 1, MessageType = (int)DrawMessageType, Value = DrawData })}]";
+            return $"42[2,{(int)Type},{JsonConvert.SerializeObject(new RawDrawData() { Type = TurnNumber, MessageType = (int)DrawMessageType, Value = DrawData })}]";
         }
     }
 }

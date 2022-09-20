@@ -1,6 +1,8 @@
 ﻿using GarticTest.Model;
 using GarticTest.Model.Messages.Client;
 using GarticTest.Model.Messages.Server;
+using GarticTest.Model.WebSocket;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -22,6 +24,8 @@ namespace GarticTest
         public delegate void MessageEventHandler(GarticMessage message);
         public event MessageEventHandler OnMessage;
 
+        public GameData GameData { get; private set; }
+
         ClientWebSocket ws;
         HttpClient http;
         Guid guid;
@@ -42,7 +46,7 @@ namespace GarticTest
             guid = Guid.NewGuid();
         }
 
-        public async Task Connect(string language, string username, string avatar, string roomId, string server = "")
+        public async Task<GameData> Connect(string language, string username, string avatar, string roomId, string server = "")
         {
             if (server == string.Empty)
                 server = await (await http.GetAsync($"https://garticphone.com/api/server?code={roomId}")).Content.ReadAsStringAsync();
@@ -52,15 +56,16 @@ namespace GarticTest
             Console.WriteLine(sid);
             string reqString = $"42[1,\"{guid.ToString().ToLower()}\",\"{username}\",\"{avatar}\",\"{language}\",true,\"{roomId}\",null,null]";
             Console.WriteLine(await (await http.PostAsync($"{server}/socket.io/?EIO=3&transport=polling&sid={sid}", new StringContent(reqString.Length + ":" + reqString))).Content.ReadAsStringAsync());
-            Console.WriteLine(await (await http.GetAsync($"{server}/socket.io/?EIO=3&transport=polling&sid={sid}")).Content.ReadAsStringAsync());
+            GameData gameData = JsonConvert.DeserializeObject<GameData>(new Regex(":42\\[1,(.*)\\]").Match(await (await http.GetAsync($"{server}/socket.io/?EIO=3&transport=polling&sid={sid}")).Content.ReadAsStringAsync()).Groups[1].Value);
             await ws.ConnectAsync(new Uri($"{server.Replace("https", "wss")}/socket.io/?EIO=3&transport=websocket&sid={sid}"), CancellationToken.None);
 
-            // Handshake
             SendString("2probe");
             SendString("5");
             await Ping();
 
             StartRoutine();
+
+            return gameData;
         }
 
         public async Task Disconnect()
@@ -87,7 +92,10 @@ namespace GarticTest
                         byte[] encoded;
                         lock (wsQueue)
                         {
-                            encoded = Encoding.UTF8.GetBytes(wsQueue.First.Value);
+                            Encoding iso = Encoding.GetEncoding("ISO-8859-1");
+                            Encoding utf8 = Encoding.UTF8;
+                            byte[] utfBytes = utf8.GetBytes(wsQueue.First.Value);
+                            encoded = Encoding.Convert(utf8, iso, utfBytes);
                             wsQueue.RemoveFirst();
                         }
                         buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);

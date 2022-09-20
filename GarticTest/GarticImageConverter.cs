@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GarticTest.Model.Enums
+namespace GarticTest
 {
-    public enum TurnType
+    internal static class GarticImageConverter
     {
-        Sentence = 3,
-        Guess = 4,
-        Draw = 5
+
     }
 }

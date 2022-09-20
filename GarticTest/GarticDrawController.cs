@@ -16,6 +16,7 @@ namespace GarticTest
         public GarticSocket Socket;
 
         private int objectCount = 0;
+        public int TurnNumber { get; set; }
 
         public GarticDrawController(GarticSocket socket)
         {
@@ -30,16 +31,61 @@ namespace GarticTest
         public void DrawPoint(Color color, Point point, int size = 2, float opacity = 1f)
         {
             objectCount++;
-            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, new object[] { 1, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { point.X, point.Y } });
-            var packetEnd = new GarticDrawMessage(DrawMessageType.End, new object[] { 1, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { point.X, point.Y } });
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 1, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { point.X, point.Y } });
+            var packetEnd = new GarticDrawMessage(DrawMessageType.End, TurnNumber, new object[] { 1, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { point.X, point.Y } });
             Socket.SendString(packetStart.Serialize());
             Socket.SendString(packetEnd.Serialize());
         }
 
-        public void DrawFilledRectangle(Color color, Rectangle rectangle)
+        public void ErasePoint(Color color, Point point, int size = 2, float opacity = 1f)
         {
             objectCount++;
-            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, new object[] { 6, objectCount, new object[] { Hex(color), 2, 1 }, new object[] { rectangle.X, rectangle.Y }, new object[] { rectangle.Right, rectangle.Bottom } });
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 2, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { point.X, point.Y } });
+            var packetEnd = new GarticDrawMessage(DrawMessageType.End, TurnNumber, new object[] { 2, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { point.X, point.Y } });
+            Socket.SendString(packetStart.Serialize());
+            Socket.SendString(packetEnd.Serialize());
+        }
+
+        public void DrawFilledRectangle(Color color, Rectangle rectangle, float opacity = 1f)
+        {
+            objectCount++;
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 6, objectCount, new object[] { Hex(color), 2, opacity.ToString().Replace(',', '.') }, new object[] { rectangle.X, rectangle.Y }, new object[] { rectangle.Right, rectangle.Bottom } });
+            Socket.SendString(packetStart.Serialize());
+        }
+
+        public void DrawRectangle(Color color, Rectangle rectangle, float opacity = 1f)
+        {
+            objectCount++;
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 4, objectCount, new object[] { Hex(color), 2, opacity.ToString().Replace(',', '.') }, new object[] { rectangle.X, rectangle.Y }, new object[] { rectangle.Right, rectangle.Bottom } });
+            Socket.SendString(packetStart.Serialize());
+        }
+
+        public void DrawFilledEllipse(Color color, Rectangle rectangle, float opacity = 1f)
+        {
+            objectCount++;
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 7, objectCount, new object[] { Hex(color), 2, opacity.ToString().Replace(',', '.') }, new object[] { rectangle.X, rectangle.Y }, new object[] { rectangle.Right, rectangle.Bottom } });
+            Socket.SendString(packetStart.Serialize());
+        }
+
+        public void DrawEllipse(Color color, Rectangle rectangle, int strokeSize = 2, float opacity = 1f)
+        {
+            objectCount++;
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 5, objectCount, new object[] { Hex(color), strokeSize, opacity.ToString().Replace(',', '.') }, new object[] { rectangle.X, rectangle.Y }, new object[] { rectangle.Right, rectangle.Bottom } });
+            Socket.SendString(packetStart.Serialize());
+        }
+
+        public void DrawLine(Color color, Point start, Point destination, int size = 2, float opacity = 1f)
+        {
+            objectCount++;
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 3, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { start.X, start.Y }, new object[] { destination.X, destination.Y } });
+            Socket.SendString(packetStart.Serialize());
+        }
+
+        [Obsolete("I don't know how it works so it's still WIP, don't use!", true)]
+        public void Fill(Color color, Point point, float opacity = 1f)
+        {
+            objectCount++;
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 8, objectCount, new object[] { Hex(color), opacity.ToString().Replace(',', '.') } });
             Socket.SendString(packetStart.Serialize());
         }
 
@@ -47,9 +93,17 @@ namespace GarticTest
         {
             if (points.Length == 0) return;
             objectCount++;
-            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, new object[] { 1, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { points[0].X, points[0].Y } });
-            var packetEnd = new GarticDrawMessage(DrawMessageType.End, new object[] { 1, objectCount, new List<object> { Hex(color), size, opacity.ToString().Replace(',', '.') } }.Concat(points.Select(point => new object[] { point.X, point.Y })));
-            Console.WriteLine(packetEnd.Serialize());
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 1, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { points[0].X, points[0].Y } });
+            var packetEnd = new GarticDrawMessage(DrawMessageType.End, TurnNumber, new object[] { 1, objectCount, new List<object> { Hex(color), size, opacity.ToString().Replace(',', '.') } }.Concat(points.Select(point => new object[] { point.X, point.Y })));
+            Socket.SendString(packetStart.Serialize());
+            Socket.SendString(packetEnd.Serialize());
+        }
+        public void EraseMultiplePoints(Color color, Point[] points, int size = 2, float opacity = 1f)
+        {
+            if (points.Length == 0) return;
+            objectCount++;
+            var packetStart = new GarticDrawMessage(DrawMessageType.Begin, TurnNumber, new object[] { 2, objectCount, new object[] { Hex(color), size, opacity.ToString().Replace(',', '.') }, new object[] { points[0].X, points[0].Y } });
+            var packetEnd = new GarticDrawMessage(DrawMessageType.End, TurnNumber, new object[] { 2, objectCount, new List<object> { Hex(color), size, opacity.ToString().Replace(',', '.') } }.Concat(points.Select(point => new object[] { point.X, point.Y })));
             Socket.SendString(packetStart.Serialize());
             Socket.SendString(packetEnd.Serialize());
         }
